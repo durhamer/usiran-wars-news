@@ -1,8 +1,8 @@
 import os
 
 # API Keys (建議在正式環境中使用 Streamlit secrets 或環境變數)
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "你的_GEMINI_API_KEY_填這裡")
-NEWS_API_KEY = os.getenv("NEWS_API_KEY", "你的_NEWS_API_KEY_填這裡")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyALqL_HPe3olECq1Xf91ngi6WCmvoek_5E")
+NEWS_API_KEY = os.getenv("NEWS_API_KEY", "bf3c7110e89d4bbc8cc7bd6606eb851b")
 
 # 統一管理不同 Agent 使用的 AI 模型
 MODELS = {
