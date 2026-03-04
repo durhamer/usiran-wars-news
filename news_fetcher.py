@@ -1,31 +1,29 @@
 import requests
 from config import NEWS_API_KEY
 
-def fetch_us_iran_news():
+def fetch_custom_news(query_keyword):
     """
-    透過 NewsAPI 抓取關於美伊衝突的最新新聞。
+    根據傳入的關鍵字，動態抓取相關新聞。
     """
-    # 關鍵字設定為美國、伊朗與軍事/衝突相關，按發布時間排序，抓取前 5 筆
-    url = (
-        f"https://newsapi.org/v2/everything?"
-        f"q=Iran AND (US OR military OR strike OR conflict)&"
-        f"sortBy=publishedAt&"
-        f"language=en&"
-        f"pageSize=5&"
-        f"apiKey={NEWS_API_KEY}"
-    )
+    url = "https://newsapi.org/v2/everything"
+    
+    # 使用字典管理參數，requests 會自動幫我們組裝並處理特殊字元的 URL 編碼
+    params = {
+        "q": query_keyword,
+        "sortBy": "publishedAt",
+        "language": "en",
+        "pageSize": 5,
+        "apiKey": NEWS_API_KEY
+    }
     
     try:
-        response = requests.get(url)
-        response.raise_for_status() # 如果發生 401 錯誤(金鑰無效)會自動拋出例外
+        response = requests.get(url, params=params)
+        response.raise_for_status() 
         data = response.json()
         
         news_list = []
         for article in data.get("articles", []):
-            # 將時間格式稍微清理一下 (原本是 2024-03-04T14:00:00Z)
             clean_time = article.get("publishedAt", "未知時間")[:16].replace("T", " ")
-            
-            # 組合標題與摘要作為情報內容
             title = article.get("title", "無標題")
             description = article.get("description", "無內文摘要")
             content = f"【{title}】{description}"
