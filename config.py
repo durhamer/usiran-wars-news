@@ -5,6 +5,6 @@ GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 NEWS_API_KEY = st.secrets["NEWS_API_KEY"] # 👈 新增這一行
 
 MODELS = {
-    "fact_checker": "gemini-2.5-flash",
-    "summarizer": "gemini-2.5-flash" 
+    "fact_checker": "gemini-2.5-flash-lite",
+    "summarizer": "gemini-2.5-flash-lite" 
 }
