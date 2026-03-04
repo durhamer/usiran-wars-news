@@ -1,18 +1,36 @@
 import streamlit as st
 from ai_core import fact_check_news
-from news_fetcher import fetch_us_iran_news # 👈 引入我們的新模組
+from news_fetcher import fetch_custom_news # 改用新的動態抓取函式
 
-st.set_page_config(page_title="美伊衝突即時情報站", layout="wide")
+st.set_page_config(page_title="地緣衝突情報站", layout="wide")
+
+# --- 側邊欄設定區 ---
+with st.sidebar:
+    st.header("⚙️ 監控設定")
+    
+    # 定義不同主題的精準搜尋語法 (Boolean Search)
+    TOPIC_QUERIES = {
+        "美伊軍事衝突": "Iran AND (US OR military OR strike OR conflict)",
+        "霍爾木茲海峽封鎖危機": '"Strait of Hormuz" AND (blockade OR closure OR attack OR tension OR oil)'
+    }
+    
+    selected_topic = st.selectbox(
+        "選擇要監控的戰略目標：",
+        options=list(TOPIC_QUERIES.keys())
+    )
+    
+    st.info(f"🔍 目前搜尋語法：\n`{TOPIC_QUERIES[selected_topic]}`")
+
+# --- 主畫面區 ---
 st.title("🌍 衝突情報即時監控與 AI 事實查核")
+st.subheader(f"當前監控目標：【{selected_topic}】")
 
-st.subheader("真實情報流即時過濾")
-st.caption("系統將自動從全球新聞網抓取最新資料，並攔截邏輯明顯錯誤或缺乏具體根據的極端消息。")
-
-# 更改按鈕名稱
-if st.button("📡 開始抓取全球最新情報"):
+if st.button("📡 開始抓取最新情報"):
+    # 根據選擇的主題，取出對應的搜尋語法丟給 API
+    query_string = TOPIC_QUERIES[selected_topic]
     
     with st.spinner("正在連線至 NewsAPI 獲取最新資料..."):
-        real_news_stream = fetch_us_iran_news()
+        real_news_stream = fetch_custom_news(query_string)
         
     if not real_news_stream:
         st.warning("目前沒有抓到相關新聞。")
@@ -26,7 +44,7 @@ if st.button("📡 開始抓取全球最新情報"):
                 result = fact_check_news(news["content"])
                 
                 if result.get("is_credible"):
-                    st.success(f"✅ **發布許可 (評估可信):** {result.get('reason')}")
+                    st.success(f"✅ **發布許可:** {result.get('reason')}")
                 else:
-                    st.error(f"❌ **已攔截 (判定可疑):** {result.get('reason')}")
+                    st.error(f"❌ **已攔截:** {result.get('reason')}")
         st.divider()
