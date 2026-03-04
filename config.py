@@ -1,11 +1,10 @@
-import os
+import streamlit as st
 
-# API Keys (建議在正式環境中使用 Streamlit secrets 或環境變數)
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyALqL_HPe3olECq1Xf91ngi6WCmvoek_5E")
-NEWS_API_KEY = os.getenv("NEWS_API_KEY", "bf3c7110e89d4bbc8cc7bd6606eb851b")
+# 透過 Streamlit 的 secrets 管理員來讀取金鑰 (絕對安全)
+GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
+NEWS_API_KEY = st.secrets["NEWS_API_KEY"] # 👈 新增這一行
 
-# 統一管理不同 Agent 使用的 AI 模型
 MODELS = {
-    "fact_checker": "gemini-2.5-flash", # 需要較強的邏輯推理能力來查核事實
-    "summarizer": "gemini-2.5-flash"  # 若未來擴充新聞摘要功能，可用較快速的模型
+    "fact_checker": "gemini-3.1-pro",
+    "summarizer": "gemini-3.1-flash" 
 }
