@@ -8,12 +8,11 @@ st.set_page_config(page_title="地緣衝突情報站", layout="wide")
 with st.sidebar:
     st.header("⚙️ 監控設定")
     
-       # 定義不同主題的精準搜尋語法 (Google News 支援的寫法)
+    # 定義不同主題的精準搜尋語法 (Google News 支援的寫法，不需加 AND)
     TOPIC_QUERIES = {
         "美伊軍事衝突": "Iran (US OR military OR strike OR conflict)",
         "霍爾木茲海峽封鎖危機": '"Strait of Hormuz" (blockade OR closure OR attack OR tension OR oil)'
     }
-
     
     selected_topic = st.selectbox(
         "選擇要監控的戰略目標：",
@@ -30,7 +29,7 @@ if st.button("📡 開始抓取最新情報"):
     # 根據選擇的主題，取出對應的搜尋語法丟給 API
     query_string = TOPIC_QUERIES[selected_topic]
     
-    with st.spinner(f"正在連線至 NewsAPI 獲取最新資料...") :
+    with st.spinner(f"正在連線至 Google News 獲取最新資料...") :
         real_news_stream = fetch_custom_news(query_string)
         
     if not real_news_stream:
@@ -40,7 +39,7 @@ if st.button("📡 開始抓取最新情報"):
         with st.container():
             st.markdown(f"### 🕒 {news['time']} | 來源: `{news['source']}`")
             
-            # 把原本直接顯示英文 raw data 的部分改成用 st.expander 摺疊起來，讓畫面更清爽
+            # 檢視原始英文情報的摺疊面板
             with st.expander("🔍 檢視原始英文情報"):
                 st.write(news['content'])
             
@@ -50,12 +49,12 @@ if st.button("📡 開始抓取最新情報"):
                 if result.get("is_credible"):
                     st.success(f"✅ **發布許可:** {result.get('reason')}")
                     
-                    # 只有在查核通過時，才進行翻譯與摘要
-                    with st.spinner("✍️ AI 繁中摘要生成中..."):
+                    # 👇 關鍵更新：傳入 news["source"] 給 AI 進行媒體立場分析
+                    with st.spinner("✍️ AI 戰情摘要與媒體簡評生成中..."):
                         summary_text = summarize_news(news["content"], news["source"])
-                        st.info(f"**情報摘要：**\n\n{summary_text}")
+                        st.info(summary_text) 
                         
-                    # 加入前往原文的按鈕 (防呆機制：確保有抓到 URL 才顯示按鈕)
+                    # 加入前往原文的按鈕
                     if "url" in news and news["url"] != "#":
                         st.link_button("🔗 閱讀完整原文", news["url"])
                     
