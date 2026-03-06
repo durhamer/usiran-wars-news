@@ -1,8 +1,13 @@
+import os
 import streamlit as st
 
-# 透過 Streamlit 的 secrets 管理員來讀取金鑰 (絕對安全)
-GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
-NEWS_API_KEY = st.secrets["NEWS_API_KEY"] # 👈 新增這一行
+# 雙棲環境設定：自動判斷是 Streamlit 網頁還是 GitHub 伺服器
+try:
+    # 1. 先嘗試當作 Streamlit 網頁，去 Secrets 保險箱拿金鑰
+    GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
+except Exception:
+    # 2. 如果出錯了，代表現在是在 GitHub Actions 背景執行，改去環境變數拿
+    GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 
 MODELS = {
     "fact_checker": "gemini-2.5-flash-lite",
