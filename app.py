@@ -8,11 +8,14 @@ st.set_page_config(page_title="地緣衝突情報站", layout="wide")
 with st.sidebar:
     st.header("⚙️ 監控設定")
     
-    # 定義不同主題的精準搜尋語法 (Google News 支援的寫法，不需加 AND)
+    # 定義不同主題的精準搜尋語法 (Google News 支援的寫法，不需加 AND）
     TOPIC_QUERIES = {
         "美伊軍事衝突": "Iran (US OR military OR strike OR conflict)",
-        "霍爾木茲海峽封鎖危機": '"Strait of Hormuz" (blockade OR closure OR attack OR tension OR oil)'
+        "霍爾木茲海峽封鎖危機": '"Strait of Hormuz" (blockade OR closure OR attack OR tension OR oil)',
+        # 👇 新增川普社群監控：鎖定他常用的平台與發言關鍵字
+        "川普社群動態與發言": 'Trump ("Truth Social" OR tweet OR X OR "social media" OR statement)'
     }
+
     
     selected_topic = st.selectbox(
         "選擇要監控的戰略目標：",
