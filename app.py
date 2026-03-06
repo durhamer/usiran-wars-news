@@ -1,6 +1,7 @@
 import streamlit as st
 from ai_core import fact_check_news, summarize_news
 from news_fetcher import fetch_custom_news
+from push_alert import send_telegram_msg  # 👈 新增這一行
 
 st.set_page_config(page_title="地緣衝突情報站", layout="wide")
 
@@ -22,7 +23,19 @@ with st.sidebar:
         options=list(TOPIC_QUERIES.keys())
     )
     
+    # ... 前面的程式碼保持不變 ...
     st.info(f"🔍 目前搜尋語法：\n`{TOPIC_QUERIES[selected_topic]}`")
+    
+    # 👇 新增系統測試區塊 👇
+    st.divider()
+    st.header("🚨 系統測試區")
+    if st.button("🔔 測試 Telegram 推播"):
+        with st.spinner("正在發送訊號至 Telegram..."):
+            success, msg = send_telegram_msg("🚨 **戰情室測試**\n\n指揮官您好，全雲端推播系統已連線成功！等待您的下一步戰術指示。")
+            if success:
+                st.success(msg)
+            else:
+                st.error(msg)
 
 # --- 主畫面區 ---
 st.title("🌍 衝突情報即時監控與 AI 事實查核")
