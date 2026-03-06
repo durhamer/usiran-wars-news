@@ -1,12 +1,13 @@
 import requests
+import streamlit as st  # 👈 記得 import streamlit
 
 def send_telegram_msg(text):
     """
     將文字訊息推播至 Telegram
     """
-    # 測試階段先將金鑰放在這裡，測試成功後我們再把它移進 Streamlit Secrets 保護
-    TELEGRAM_TOKEN = "8705402683:AAHyxOLKZuVjCOTarw6VmsvjBDN3zN8xzEU"
-    CHAT_ID = "1211610803"
+    # 🔐 改成透過 Streamlit secrets 安全讀取，再也不怕外洩！
+    TELEGRAM_TOKEN = st.secrets["TELEGRAM_TOKEN"]
+    CHAT_ID = st.secrets["CHAT_ID"]
     
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     
