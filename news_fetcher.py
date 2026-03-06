@@ -22,17 +22,23 @@ def fetch_custom_news(query_keyword):
         data = response.json()
         
         news_list = []
+        # ... 前面的程式碼保持不變 ...
         for article in data.get("articles", []):
             clean_time = article.get("publishedAt", "未知時間")[:16].replace("T", " ")
             title = article.get("title", "無標題")
             description = article.get("description", "無內文摘要")
             content = f"【{title}】{description}"
             
+            # 👇 新增這一行來抓取原文連結
+            article_url = article.get("url", "#") 
+            
             news_list.append({
                 "time": clean_time,
                 "source": article.get("source", {}).get("name", "未知來源"),
-                "content": content
+                "content": content,
+                "url": article_url # 👇 將網址存入字典
             })
+# ... 後面的程式碼保持不變 ...
             
         return news_list
         
