@@ -36,17 +36,26 @@ def fact_check_news(news_text):
     except Exception as e:
         return {"is_credible": False, "reason": f"AI 查核程序發生錯誤: {e}"}
 
-def summarize_news(news_text):
+# ... 上面的 fact_check_news 保持不變 ...
+
+def summarize_news(news_text, source_name="未知來源"):
     """
-    接收英文新聞內容，透過較快速的 Flash 模型進行繁體中文摘要。
+    接收英文新聞內容與來源，透過較快速的 Flash 模型進行繁體中文摘要與媒體立場簡評。
     """
     model_name = MODELS["summarizer"]
     model = genai.GenerativeModel(model_name)
 
     prompt = f"""
-    請以「繁體中文」將以下英文地緣政治新聞進行精簡摘要。
-    請直接用 2 到 3 個重點條列（bullet points）呈現，抓出最核心的「人、事、時、地、物」或對軍事/經濟的影響。
-    語氣請保持客觀專業。
+    請扮演專業的情報分析師，將以下英文地緣政治新聞進行「繁體中文」摘要，並針對其新聞來源進行「立場簡評」。
+    
+    請嚴格依照以下格式輸出：
+
+    【情報摘要】：
+    請用 2 到 3 個重點條列（bullet points）呈現最核心的「人、事、時、地、物」及對局勢的影響。
+
+    【媒體立場與背景簡評】：
+    新聞來源是：「{source_name}」。
+    請根據你對該媒體機構（或新聞內容中提及之作者）的了解，用 1 到 2 句話客觀評估其常見的政治立場、背後屬性（例如：西方主流媒體、親美/親伊立場、中東國家官媒、商業財經媒體等），以及閱讀此報導時應注意的潛在偏見或風向。
 
     新聞內容：
     {news_text}
