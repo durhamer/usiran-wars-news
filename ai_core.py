@@ -36,8 +36,6 @@ def fact_check_news(news_text):
     except Exception as e:
         return {"is_credible": False, "reason": f"AI 查核程序發生錯誤: {e}"}
 
-# ... 上面的 fact_check_news 保持不變 ...
-
 def summarize_news(news_text, source_name="未知來源"):
     """
     接收英文新聞內容與來源，透過較快速的 Flash 模型進行繁體中文摘要與媒體立場簡評。
