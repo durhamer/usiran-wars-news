@@ -52,7 +52,7 @@ if st.button("📡 開始抓取最新情報"):
                     
                     # 只有在查核通過時，才進行翻譯與摘要
                     with st.spinner("✍️ AI 繁中摘要生成中..."):
-                        summary_text = summarize_news(news["content"])
+                        summary_text = summarize_news(news["content"], news["source"])
                         st.info(f"**情報摘要：**\n\n{summary_text}")
                         
                     # 加入前往原文的按鈕 (防呆機制：確保有抓到 URL 才顯示按鈕)
